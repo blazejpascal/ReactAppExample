@@ -21,21 +21,42 @@ const list = [
 ];
 
 class App extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            list,
+        }
+
+        this.onDismiss = this.onDismiss.bind(this)
+    }
+
+    onDismiss(id) {
+        const isNotId = item => item.objectId !== id
+        const updatedlist = this.state.list.filter(isNotId)
+        this.setState({list: updatedlist})
+    }
+
     render() {
         return (
             <div className="App">
-
-                {list.map((item) => {
-                    return (
-                        <span key={item.objectId}>
-                            <div>{item.title}</div>
-                            <a href={item.url}> {item.title} </a>
-                            <div>{item.author}</div>
-                            <div>{item.points}</div>
+                {this.state.list.map(item =>
+                    <div key={item.objectId}>
+                        <span>
+                         <a href={item.url}> {item.title} </a>
                         </span>
-
-                    )
-                })}
+                        <span>{item.author}</span>
+                        <span>{item.points}</span>
+                        <span>{item.nun_comments}</span>
+                        <span>
+                            <button onClick={() => this.onDismiss(item.objectId)}
+                            type="button"
+                            >
+                                Dismiss
+                            </button>
+                        </span>
+                    </div>
+                )}
             </div>
         )
     }
