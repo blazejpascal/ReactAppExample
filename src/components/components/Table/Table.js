@@ -16,7 +16,7 @@ const smallColumn = {
 const Table = ({ list, onDismiss }) =>
         <div className="table">
        { list.map(item =>
-            <div key={item.objectId} className="table-row">
+            <div key={item.objectID} className="table-row">
                     <span style={largeColumn}>
                      <a href={item.url}> {item.title} </a>
                     </span>
@@ -24,7 +24,7 @@ const Table = ({ list, onDismiss }) =>
                 <span style={smallColumn}>{item.points}</span>
                 <span style={smallColumn}>{item.nun_comments}</span>
                 <span style={smallColumn}>
-                        <Button onClick={() => onDismiss(item.objectId)}
+                        <Button onClick={() => onDismiss(item.objectID)}
                                 className="button-inline"
                         >
                             Dismiss
