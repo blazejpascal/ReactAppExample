@@ -1,11 +1,12 @@
 import React from 'react';
 import './Button.css';
+import PropTypes from 'prop-types'
 
 const Button = (props) => {
     const {
         onClick,
-        className = "",
         children,
+        className,
     } = props
 
     return(
@@ -17,6 +18,15 @@ const Button = (props) => {
             {children}
         </button>
     )
+}
+Button.defaultProps = {
+    className: '',
+}
+
+Button.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    className: PropTypes.string,
+    children: PropTypes.node.isRequired,
 }
 
 export default Button

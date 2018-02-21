@@ -1,18 +1,28 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './Search.css';
 
 
-const Search = ({value, onChange, onSubmit, children}) =>
+class Search extends Component {
+    componentDidMount() {
+        this.input.focus();
+    }
+
+    render() {
+        const {value, onChange, onSubmit, children} = this.props
+        return (
             <form onSubmit={onSubmit}>
-                 <input
+                <input
                     type="text"
                     value={value}
                     onChange={onChange}
-                    onSubmit={onSubmit}
-                 />
+                    ref = {(node) => {this.input = node}}
+                />
                 <button type="submit">
-                        {children}
+                    {children}
                 </button>
             </form>
+        )
+    }
+}
 
 export default Search

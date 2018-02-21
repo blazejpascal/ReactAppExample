@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import './App.css';
 import Search from './components/Search/Search'
 import Table from './components/Table/Table'
-import Button from "./components/Button/Button";
-
-const DEFAULT_QUERY = 'redux'
-const DEFAULT_HPP = '5'
-
-const PATH_BASE = 'https://hn.algolia.com/api/v1'
-const PATH_SEARCH = '/search'
-const PARAM_SEARCH = 'query='
-const PARAM_PAGE = 'page='
-const PARAM_HPP = 'hitsPerPage='
-
+import Button from './components/Button/Button'
+import Loading from './components/Loading/Loading'
+import {
+    DEFAULT_QUERY,
+    DEFAULT_HPP,
+    PATH_BASE,
+    PATH_SEARCH,
+    PARAM_SEARCH,
+    PARAM_PAGE,
+    PARAM_HPP,
+} from '../constants'
 
 class App extends Component {
     constructor(props) {
@@ -23,6 +23,8 @@ class App extends Component {
             searchKey: '',
             searchTerm: DEFAULT_QUERY,
             error: null,
+            isLoading: false,
+            sortKey: 'NONE',
         }
 
         this.onSearchSubmit = this.onSearchSubmit.bind(this)
@@ -30,6 +32,11 @@ class App extends Component {
         this.setSearchTopStories = this.setSearchTopStories.bind(this)
         this.onSearchChange = this.onSearchChange.bind(this)
         this.onDismiss = this.onDismiss.bind(this)
+        this.onSort = this.onSort.bind(this)
+    }
+
+    onSort(sortKey) {
+        this.setState({ sortKey})
     }
 
     setSearchTopStories(result) {
@@ -48,12 +55,15 @@ class App extends Component {
             results: {
                 ...results,
                 [searchKey]: { hits: updatedHits, page }
-            }
+            },
+            isLoading: false
         })
 
     }
 
     fetchSearchTopStories(searchTerm, page = 0) {
+        this.setState({isLoading: true})
+
         fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
             .then(response => response.json())
             .then(result => this.setSearchTopStories(result))
@@ -99,6 +109,7 @@ class App extends Component {
             results,
             searchKey,
             error,
+            isLoading,
         } = this.state
         const page = (
             results &&
@@ -133,12 +144,21 @@ class App extends Component {
                     />
                 }
                 <div className="interactions">
-                    <Button onClick={()=> this.fetchSearchTopStories(searchKey, page + 1)} >
+                    { isLoading
+                    ? <Loading/>
+                    : <Button onClick={()=> this.fetchSearchTopStories(searchKey, page + 1)} >
                         More
                     </Button>
+                    }
                 </div>
             </div>
         )
     }
 }
 export default App
+
+export {
+    Button,
+    Table,
+    Search,
+}
