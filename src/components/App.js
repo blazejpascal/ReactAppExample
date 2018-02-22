@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Search from './components/Search/Search'
 import Table from './components/Table/Table'
-import Button from './components/Button/Button'
-import Loading from './components/Loading/Loading'
+import ButtonWithLoading from './components/ButtonWithLoading/ButtonWithLoading'
 import {
     DEFAULT_QUERY,
     DEFAULT_HPP,
@@ -13,6 +12,8 @@ import {
     PARAM_PAGE,
     PARAM_HPP,
 } from '../constants'
+
+
 
 class App extends Component {
     constructor(props) {
@@ -25,6 +26,7 @@ class App extends Component {
             error: null,
             isLoading: false,
             sortKey: 'NONE',
+            isSortReverse: false,
         }
 
         this.onSearchSubmit = this.onSearchSubmit.bind(this)
@@ -36,7 +38,9 @@ class App extends Component {
     }
 
     onSort(sortKey) {
-        this.setState({ sortKey})
+        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse
+        this.setState({ sortKey, isSortReverse})
+        console.log(this.state.isSortReverse)
     }
 
     setSearchTopStories(result) {
@@ -110,6 +114,8 @@ class App extends Component {
             searchKey,
             error,
             isLoading,
+            sortKey,
+            isSortReverse,
         } = this.state
         const page = (
             results &&
@@ -140,25 +146,22 @@ class App extends Component {
                       </div>
                     : <Table
                        list={list}
+                       sortKey={sortKey}
+                       isSortReversed={isSortReverse}
                        onDismiss={this.onDismiss}
+                       onSort={this.onSort}
                     />
                 }
                 <div className="interactions">
-                    { isLoading
-                    ? <Loading/>
-                    : <Button onClick={()=> this.fetchSearchTopStories(searchKey, page + 1)} >
-                        More
-                    </Button>
-                    }
+                   <ButtonWithLoading
+                       isLoading={isLoading}
+                       onClick={() => this.fetchSearchTopStories(searchKey, page +1)}
+                   >
+                       More
+                   </ButtonWithLoading>
                 </div>
             </div>
         )
     }
 }
 export default App
-
-export {
-    Button,
-    Table,
-    Search,
-}
